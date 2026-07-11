@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>Your wishes Cake</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  min-height:100vh;
+  overflow-x:hidden;
+  overflow-y:auto;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  font-family:'Inter',sans-serif;
+  background:
+  radial-gradient(circle at top left,#f7e2c6 0%,transparent 40%),
+  radial-gradient(circle at bottom right,#c79572 0%,transparent 35%),
+  linear-gradient(180deg,#efd4ba,#cda98a);
+}
+
+/* =========================
+   SCENE
+========================= */
+
+.scene{
+  position:relative;
+  width:100%;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.main-title{
+  position:absolute;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:65px;
+  font-family:"Cormorant Garamond",serif;
+  font-weight:600;
+  color:#4f2418;
+  letter-spacing:2px;
+  text-shadow:
+  0 4px 20px rgba(0,0,0,.12);
+  z-index:5;
+  text-align:center;
+  width:100%;
+}
+
+.cake-hint{
+  position:absolute;
+  bottom:45px;
+  font-size:18px;
+  font-weight: bolder;
+  letter-spacing:2px;
+  color:rgba(79,36,24,.75);
+  font-family:"Inter",sans-serif;
+  z-index:5;
+}
+
+/* =========================
+   CAKE
+========================= */
+
+.cake{
+  position:relative;
+  width:250px;
+  height:250px;
+}
+
+/* =========================
+   PLATE
+========================= */
+
+.plate{
+  width:270px;
+  height:110px;
+  position:absolute;
+  top:235px;
+  left:-10px; 
+  z-index: -7;
+  background:#ccc;
+  border-radius:50%;
+  box-shadow:
+  0 5px 40px rgba(0,0,0,0.5);
+}
+
+/* =========================
+   BASE LAYER
+========================= */
+
+.layer{
+  position:absolute;
+  display:block;
+  width:250px;
+  height:100px;
+  border-radius:50%;
+  background-color:#6b3e2e;
+  box-shadow:
+    0 2px 0px #5a3325,
+    0 4px 0px #4b2a1f,
+    0 6px 0px #4b2a1f,
+    0 8px 0px #4b2a1f,
+    0 10px 0px #4b2a1f,
+    0 12px 0px #4b2a1f,
+    0 14px 0px #4b2a1f,
+    0 16px 0px #4b2a1f,
+    0 18px 0px #4b2a1f,
+    0 20px 0px #4b2a1f,
+    0 22px 0px #4b2a1f,
+    0 24px 0px #4b2a1f,
+    0 26px 0px #4b2a1f,
+    0 28px 0px #4b2a1f,
+    0 30px 0px #4b2a1f;
+}
+
+/* =========================
+   TOP CAKE
+========================= */
+
+.top-cake{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  z-index:100;
+  transition:
+  transform .9s cubic-bezier(.22,1,.36,1);
+}
+
+/* =========================
+   STACKING
+========================= */
+
+.layer-top{
+  top:0px;
+}
+
+.layer1{
+  z-index:99;
+  top:33px;
+}
+
+.layer2{
+  z-index:98;
+  top:66px;
+}
+
+.layer3{
+  z-index:97;
+  top:99px;
+}
+
+.layer4{
+  z-index:96;
+  top:132px;
+}
+
+.layer5{
+  z-index:95;
+  top:165px;
+}
+
+.layer6{
+  z-index:94;
+  top:198px;
+}
+
+.layer7{
+  z-index:93;
+  top:231px;
+}
+
+/* =========================
+   ICING
+========================= */
+
+.icing{
+  top:2px;
+  left:5px;
+  background:#f8f1e7;
+  width:240px;
+  height:90px;
+  border-radius:50%;
+  position:absolute;
+}
+
+/* =========================
+   DRIPS
+========================= */
+
+.drip{
+  width:50px;
+  height:60px;
+  border-bottom-left-radius:25px;
+  border-bottom-right-radius:25px;
+  background:#f8f1e7;
+  position:absolute;
+}
+
+.drip1{
+  top:53px;
+  left:5px;
+  transform:skewY(15deg);
+  height:48px;
+  width:40px;
+}
+
+.drip2{
+  top:69px;
+  left:181px;
+  transform:skewY(-15deg);
+}
+
+.drip3{
+  top:54px;
+  left:90px;
+  width:80px;
+  border-bottom-left-radius:40px;
+  border-bottom-right-radius:40px;
+}
+
+/* =========================
+   WISH LAYER
+========================= */
+
+.wish-layer{
+  cursor:pointer;
+  transition:
+  opacity .7s ease,
+  transform .7s ease,
+  filter .7s ease;
+}
+
+.wish-layer:hover{
+  transform:
+  translateY(-2px);
+}
+
+.wish-layer.opened{
+  opacity:0;
+  transform:
+  translateY(50px)
+  scale(.85);
+  filter:blur(6px);
+  pointer-events:none;
+}
+
+/* =========================
+   CANDLES
+========================= */
+
+.candle{
+  background:#7B020B;
+  width:20px;
+  height:60px;
+  border-radius:8px;
+  position:absolute;
+  top:-20px;
+  z-index:20;
+}
+
+.c1{
+  left:50%;
+  transform:
+  translateX(-50%)
+  translateX(-35px);
+}
+
+.c2{
+  left:50%;
+  transform:
+  translateX(-50%);
+}
+
+.c3{
+  left:50%;
+  transform:
+  translateX(-50%)
+  translateX(35px);
+}
+
+/* =========================
+   FLAME
+========================= */
+
+.flame{
+  position:absolute;
+  background-color:orange;
+  width:10px;
+  height:25px;
+  border-radius:
+  8px 8px 8px 8px /
+  20px 20px 8px 8px;
+  top:-34px;
+  left:50%;
+  margin-left:-7.5px;
+  z-index:10;
+  box-shadow:
+  0 0 10px rgba(255,165,0,0.5),
+  0 0 20px rgba(255,165,0,0.5),
+  0 0 60px rgba(255,165,0,0.5),
+  0 0 80px rgba(255,165,0,0.5);
+  transform-origin:50% 90%;
+  animation:
+  flicker 1s ease-in-out alternate infinite;
+}
+
+.candle.out .flame{
+  display:none;
+}
+
+@keyframes flicker{
+
+  0%{
+    transform:rotate(-5deg);
+  }
+
+  100%{
+    transform:rotate(5deg);
+  }
+
+}
+
+/* =========================
+   CARD
+========================= */
+
+.wish-card{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:
+  translate(-50%,-50%)
+  scale(.92);
+  width:700px;
+  max-width:92%;
+  max-height:80vh;
+  overflow-y:auto;
+  padding:36px;
+  border-radius:36px;
+  background:
+  rgba(255,248,238,.30);
+  backdrop-filter:blur(18px);
+  border:
+  1px solid rgba(255,255,255,.18);
+  box-shadow:
+  0 20px 45px rgba(0,0,0,.18);
+  text-align:center;
+  opacity:0;
+  pointer-events:none;
+  transition:
+  opacity .6s ease,
+  transform .6s ease;
+  z-index:9999;
+}
+
+.wish-card.show{
+  opacity:1;
+  pointer-events:auto;
+  transform:
+  translate(-50%,-50%)
+  scale(1);
+}
+
+.wish-label{
+  font-size:14px;
+  letter-spacing:4px;
+  color:#87383b;
+  font-weight:600;
+}
+
+.divider{
+  width:180px;
+  height:1px;
+  background:
+  rgba(135,56,59,.22);
+  margin:18px auto 30px;
+  position:relative;
+}
+
+.divider::after{
+  content:"♥";
+  position:absolute;
+  left:50%;
+  top:-12px;
+  transform:translateX(-50%);
+  color:#a43a46;
+  background:
+  rgba(255,248,238,.8);
+  padding:0 10px;
+}
+
+.wish-mode{
+  font-size:45px;
+  line-height:1.08;
+  color: #552525;
+}
+
+.letter-mode{
+  font-size:26px;
+  line-height:1.8;
+  text-align:left;
+  color: #000000;
+  font-weight: bold;
+}
+
+.wish-text{
+    font-family: "Cormorant Garamond", serif;
+    font-weight: bolder;
+    overflow-y: auto;
+    padding-right: 8px;
+    transition: .3s;
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.wish-btn{
+  margin-top:25px;
+  border:none;
+  padding:15px 25px;
+  border-radius:999px;
+  background:
+  linear-gradient(135deg,
+  #b33241,
+  #821626);
+  color:white;
+  font-size:20px;
+  font-family: "Cormorant Garamond", serif;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.wish-btn:hover{
+  transform:translateY(-3px);
+}
+
+/* =========================
+   GLITTER
+========================= */
+
+.glitter{
+  position:absolute;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  animation:
+  explode 2s forwards;
+}
+
+@keyframes explode{
+
+  to{
+    transform:
+    translateY(200px);
+    opacity:0;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:768px){
+
+  .cake{
+    transform:scale(.82);
+  }
+
+  .letter-mode{
+    font-size:20px;
+    line-height:1.8;
+  }
+
+  .main-title{
+   top: 100px;
+   font-size: 45px;
+  }
+
+  .cake-hint{
+    text-align:center;
+    font-size: 20px;
+    margin: 15px;
+  }
+
+  .wish-btn{
+    padding: 10px 15px;
+    font-size: 15px;
+  }
+
+  .wish-mode{
+  font-size:28px;
+  line-height:1.08;
+}
+
+.wish-card{
+  max-height:50vh;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+<div class="scene">
+
+  <h1 class="main-title">
+  Happy Birthday
+  </h1>
+
+  <div class="cake">
+    <div class="plate"></div>
+    <!-- TOP CAKE -->
+    <div class="top-cake" id="topCake">
+      <div class="layer layer-top"></div>
+      <div class="icing"></div>
+      <div class="drip drip1"></div>
+      <div class="drip drip2"></div>
+      <div class="drip drip3"></div>
+      <!-- CANDLES -->
+      <div class="candle c1">
+        <div class="flame"></div>
+      </div>
+      <div class="candle c2">
+        <div class="flame"></div>
+      </div>
+      <div class="candle c3">
+        <div class="flame"></div>
+      </div>
+
+    </div>
+      <div class="layer wish-layer layer1" data-index="-1"></div>
+      <div class="layer wish-layer layer2" data-index="0"></div>
+      <div class="layer wish-layer layer3" data-index="1"></div>
+      <div class="layer wish-layer layer4" data-index="2"></div>
+      <div class="layer wish-layer layer5" data-index="3"></div>
+      <div class="layer wish-layer layer6" data-index="4"></div>
+    </div>
+
+    <p class="cake-hint">
+      tap every layer of the cake to see the wishes
+    </p>
+
+  <!-- CARD -->
+
+  <div class="wish-card" id="wishCard">
+    <div class="wish-label" id="wishLabel">
+      WISH 1 / 5
+    </div>
+    <div class="divider"></div>
+    <div class="wish-text" id="wishText">
+      I hope this year feels lighter for you.
+    </div>
+    <button class="wish-btn" id="nextBtn">
+      continue
+    </button>
+  </div>
+
+</div>
+
+<audio id="bgMusic" loop>
+  <source src="https://giftinn.github.io/music-host/Count%20on%20Me%20-%20Bruno%20Mars.mp3" type="audio/mp3">
+</audio>
+
+<script>
+/* =========================
+   WISHES
+========================= */
+
+const wishes = [
+  "I hope this year feels lighter for you.",
+  "May your days become softer and calmer.",
+  "I hope good things find you gently.",
+  "May your heart rest a little easier.",
+  "I hope you smile more this year.",
+];
+
+const finalLetter = `
+Happy birthday.<br><br>
+
+I know life has not always been easy lately,
+but I hope today feels softer.
+I hope you remember that you are still growing,
+still healing,
+still deserving of beautiful things.<br><br>
+
+Thank you for surviving days
+that nobody knew were heavy.
+And I hope this new age
+brings quieter minds,
+warmer mornings,
+and gentler nights.<br><br>
+
+Please stay.<br>
+The world is better with you in it.
+`;
+
+const layers = document.querySelectorAll(".wish-layer");
+const wishCard = document.getElementById("wishCard");
+const wishText = document.getElementById("wishText");
+const wishLabel = document.getElementById("wishLabel");
+const nextBtn = document.getElementById("nextBtn");
+const candles = document.querySelectorAll(".candle");
+const bgMusic = document.getElementById("bgMusic");
+
+bgMusic.volume = 0.90;
+
+let currentLayer = 0;
+let blown = false;
+let cardOpened = false;
+let musicStarted = false;
+
+function updateWish(index){
+  wishText.classList.remove("letter-mode");
+  wishText.classList.add("wish-mode");
+
+  wishText.style.opacity = 0;
+
+  setTimeout(() => {
+    wishText.innerHTML = wishes[index];
+    wishLabel.innerHTML = `WISH ${index + 1} / 5`;
+    wishText.style.opacity = 1;
+  }, 200);
+}
+
+function openCard(index){
+
+  if(index === 0) return;
+
+  const wishIndex = index - 1;
+
+  if(wishIndex !== currentLayer) return;
+  if(cardOpened) return;
+
+  if(!musicStarted){
+    bgMusic.play();
+    musicStarted = true;
+  }
+
+  cardOpened = true;
+
+  updateWish(wishIndex);
+
+  wishCard.classList.add("show");
+
+  layers[index].style.filter = "brightness(1.15)";
+}
+
+function closeCard(){
+
+  wishCard.classList.remove("show");
+
+  layers[currentLayer + 1].style.filter = "brightness(1)";
+
+  currentLayer++;
+  cardOpened = false;
+
+  if(currentLayer >= wishes.length){
+
+    nextBtn.innerHTML = "Blow Candles";
+
+    // volume dikecilin pas siap niup
+    bgMusic.volume = 0.15;
+  }
+}
+
+layers.forEach((layer,index)=>{
+  layer.addEventListener("click",()=>{
+    openCard(index);
+  });
+});
+
+nextBtn.addEventListener("click",()=>{
+
+  if(currentLayer >= wishes.length){
+    blowCandles();
+  }else{
+    closeCard();
+  }
+
+});
+
+function blowCandles(){
+
+  if(blown) return;
+
+  blown = true;
+
+  candles.forEach(c=>{
+    c.classList.add("out");
+  });
+
+  bgMusic.volume = 0.90;
+
+  glitterExplosion();
+
+  setTimeout(()=>{
+    showFinalLetter();
+  },3000);
+}
+
+function showFinalLetter(){
+
+  wishLabel.innerHTML = "A LETTER FOR YOU";
+
+  wishText.classList.remove("wish-mode");
+  wishText.classList.add("letter-mode");
+  wishText.innerHTML = finalLetter;
+  nextBtn.style.display = "none";
+  wishCard.classList.add("show");
+}
+
+async function startMic(){
+
+  try{
+
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio:true
+    });
+
+    const audioContext = new AudioContext();
+    const mic = audioContext.createMediaStreamSource(stream);
+    const analyser = audioContext.createAnalyser();
+
+    mic.connect(analyser);
+
+    analyser.fftSize = 256;
+
+    const data = new Uint8Array(
+      analyser.frequencyBinCount
+    );
+
+    function detect(){
+
+      analyser.getByteFrequencyData(data);
+
+      const volume =
+      data.reduce((a,b)=>a+b) / data.length;
+
+      if(
+        volume > 60 &&
+        !blown &&
+        currentLayer >= wishes.length
+      ){
+        blowCandles();
+      }
+
+      requestAnimationFrame(detect);
+    }
+
+    detect();
+
+  }catch(err){
+    console.log("Mic permission denied");
+  }
+}
+
+startMic();
+
+function glitterExplosion(){
+
+  for(let i=0;i<150;i++){
+
+    const g = document.createElement("div");
+
+    g.classList.add("glitter");
+
+    g.style.left = Math.random()*100 + "%";
+    g.style.top = Math.random()*100 + "%";
+
+    g.style.background =
+    `hsl(${Math.random()*360},100%,60%)`;
+
+    document.body.appendChild(g);
+
+    setTimeout(()=>{
+      g.remove();
+    },2000);
+  }
+}
+</script>
+
+</body>
+</html>
