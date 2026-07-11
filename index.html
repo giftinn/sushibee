@@ -428,6 +428,17 @@ body{
     transition: .3s;
 }
 
+.letter-photo{
+  display:none;
+  width:100%;
+  max-width:320px;
+  margin:0 auto 25px;
+  border-radius:20px;
+  object-fit:cover;
+  box-shadow:0 10px 25px rgba(0,0,0,.18);
+  border:3px solid rgba(255,255,255,.5);
+}
+
 /* =========================
    BUTTON
 ========================= */
@@ -566,8 +577,11 @@ body{
       WISH 1 / 5
     </div>
     <div class="divider"></div>
+
+    <img id="letterPhoto" class="letter-photo" src="" alt="">
+
     <div class="wish-text" id="wishText">
-      I hope this year feels lighter for you.
+      Semoga kamu selalu dikelilingi hal baik dan orang baik
     </div>
     <button class="wish-btn" id="nextBtn">
       continue
@@ -581,42 +595,27 @@ body{
 </audio>
 
 <script>
-/* =========================
-   WISHES
-========================= */
 
 const wishes = [
-  "I hope this year feels lighter for you.",
-  "May your days become softer and calmer.",
-  "I hope good things find you gently.",
-  "May your heart rest a little easier.",
-  "I hope you smile more this year.",
+  "Semoga kamu selalu dikelilingi hal baik dan orang baik",
+  "Hidup lebih lama dan sehat biar orang-orang bahagia liat senyum kamu",
+  "Semoga semua mimpi dan cita-cita kamu terwujud, i would love to be the one stand with a big proud!",
+  "Tetap selalu jadi orang baik dan sayangku yang selaluu aku kenal",
+  "Semoga kamu selalu dijaga dimanapun kamu berada dan apapun yang kamu lakukan.",
 ];
 
 const finalLetter = `
-Happy birthday.<br><br>
+Happy birthday love, 
+Welcome to your day, you are the magical soul i ever met. I always happy to meet you and I’m blessed that you are the person i can always rely on my hardest and my happiest moments. Your parents must be the luckiest in this world to have you as their kid. You are the strong one, the guy i always amaze on. You can always be the warrior in this worries world. You have the prettiest soul i always wanted to embrace. You are you, Jonarthen Maxrefucell. The boy i always want to hug and hold all the time till the last breath i have. 
 
-I know life has not always been easy lately,
-but I hope today feels softer.
-I hope you remember that you are still growing,
-still healing,
-still deserving of beautiful things.<br><br>
-
-Thank you for surviving days
-that nobody knew were heavy.
-And I hope this new age
-brings quieter minds,
-warmer mornings,
-and gentler nights.<br><br>
-
-Please stay.<br>
-The world is better with you in it.
+Enjoy your day, sayang. I will always cherish you. I hope this year treats you better than the last one you feel upset :) May this cake fulfill my presence on your day. I love you, more than you can expect how much it is.
 `;
 
 const layers = document.querySelectorAll(".wish-layer");
 const wishCard = document.getElementById("wishCard");
 const wishText = document.getElementById("wishText");
 const wishLabel = document.getElementById("wishLabel");
+const letterPhoto = document.getElementById("letterPhoto");
 const nextBtn = document.getElementById("nextBtn");
 const candles = document.querySelectorAll(".candle");
 const bgMusic = document.getElementById("bgMusic");
@@ -632,6 +631,7 @@ function updateWish(index){
   wishText.classList.remove("letter-mode");
   wishText.classList.add("wish-mode");
 
+  letterPhoto.style.display = "none";
   wishText.style.opacity = 0;
 
   setTimeout(() => {
@@ -676,8 +676,7 @@ function closeCard(){
   if(currentLayer >= wishes.length){
 
     nextBtn.innerHTML = "Blow Candles";
-
-    // volume dikecilin pas siap niup
+    
     bgMusic.volume = 0.15;
   }
 }
@@ -719,10 +718,15 @@ function blowCandles(){
 
 function showFinalLetter(){
 
+
   wishLabel.innerHTML = "A LETTER FOR YOU";
 
   wishText.classList.remove("wish-mode");
   wishText.classList.add("letter-mode");
+
+  letterPhoto.src = "foto.jpg"; 
+  letterPhoto.style.display = "block";
+
   wishText.innerHTML = finalLetter;
   nextBtn.style.display = "none";
   wishCard.classList.add("show");
@@ -733,48 +737,93 @@ async function startMic(){
   try{
 
     const stream = await navigator.mediaDevices.getUserMedia({
-      audio:true
+      audio:{
+        echoCancellation:false,
+        noiseSuppression:false,
+        autoGainControl:false
+      }
     });
 
-    const audioContext = new AudioContext();
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
     const mic = audioContext.createMediaStreamSource(stream);
+
     const analyser = audioContext.createAnalyser();
+
+    analyser.fftSize = 1024;
 
     mic.connect(analyser);
 
-    analyser.fftSize = 256;
+    const data = new Uint8Array(analyser.fftSize);
 
-    const data = new Uint8Array(
-      analyser.frequencyBinCount
-    );
+    let ambient = 0;
+    let calibrated = false;
+    let samples = 0;
 
     function detect(){
 
-      analyser.getByteFrequencyData(data);
+      analyser.getByteTimeDomainData(data);
 
-      const volume =
-      data.reduce((a,b)=>a+b) / data.length;
+      let sum = 0;
 
-      if(
-        volume > 60 &&
-        !blown &&
-        currentLayer >= wishes.length
-      ){
-        blowCandles();
+      for(let i=0;i<data.length;i++){
+
+        const x = (data[i]-128)/128;
+
+        sum += x*x;
+
+      }
+
+      const rms = Math.sqrt(sum/data.length);
+
+      // Kalibrasi suara ruangan selama ±1 detik
+      if(!calibrated){
+
+        ambient += rms;
+        samples++;
+
+        if(samples >= 60){
+
+          ambient /= samples;
+          calibrated = true;
+
+          console.log("Ambient:", ambient);
+
+        }
+
+      }else{
+
+        const threshold = ambient + 0.05;
+
+        if(
+          rms > threshold &&
+          !blown &&
+          currentLayer >= wishes.length
+        ){
+
+          console.log("Blow detected!", rms);
+
+          blowCandles();
+
+        }
+
       }
 
       requestAnimationFrame(detect);
+
     }
 
     detect();
 
   }catch(err){
+
     console.log("Mic permission denied");
+
   }
+
 }
 
 startMic();
-
 function glitterExplosion(){
 
   for(let i=0;i<150;i++){
